@@ -1,15 +1,24 @@
 package com.example.mybooks.ui.viewholder
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mybooks.R
 import com.example.mybooks.databinding.ItemBookBinding
 import com.example.mybooks.entity.BookEntity
+import com.example.mybooks.ui.listener.BookListener
 
-class BookViewHolder(private val item: ItemBookBinding): RecyclerView.ViewHolder(item.root) {
+class BookViewHolder(private val item: ItemBookBinding, private val listener: BookListener) :
+    RecyclerView.ViewHolder(item.root) {
     fun bind(book: BookEntity) {
         item.textviewTitle.text = book.title
         item.textviewAuthor.text = book.author
         item.textviewGenre.text = book.genre
+
+        item.textviewTitle.setOnClickListener (object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                listener.onClick(book.id)
+            }
+        })
 
         setGenreBackground(book.genre)
 
