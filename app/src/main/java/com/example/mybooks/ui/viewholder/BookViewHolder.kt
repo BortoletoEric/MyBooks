@@ -6,6 +6,6 @@ import com.example.mybooks.entity.BookEntity
 
 class BookViewHolder(private val item: ItemBookBinding): RecyclerView.ViewHolder(item.root) {
     fun bind(book: BookEntity) {
-        //TODO
+        item.textviewTittle.text = book.title
     }
 }
