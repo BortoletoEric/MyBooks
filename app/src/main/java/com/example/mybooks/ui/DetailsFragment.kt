@@ -1,10 +1,11 @@
 package com.example.mybooks.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.mybooks.R
@@ -42,8 +43,32 @@ class DetailsFragment : Fragment() {
     private fun setListeners() {
         binding.imageviewBack.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
-
         }
+
+        binding.buttonRemove.setOnClickListener {
+            handleRemove()
+        }
+
+        binding.checkboxFavorite.setOnClickListener {
+            handleFavorite()
+        }
+    }
+
+    private fun handleRemove() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(getString(R.string.dialog_message_delete_item))
+            .setPositiveButton(getString(R.string.dialog_positive_button_yes)
+            ) { dialog, which ->
+                viewModel.deleteBook(bookId)
+            }
+            .setNegativeButton(getString(R.string.dialog_negative_button_no)) { dialog, which ->
+                dialog.dismiss()
+            }
+        builder.create().show()
+    }
+
+    private fun handleFavorite() {
+        viewModel.favorite(bookId)
     }
 
     private fun setObservers() {
@@ -54,6 +79,18 @@ class DetailsFragment : Fragment() {
             binding.checkboxFavorite.isChecked = it.favorite
 
             setGenreBackground(it.genre)
+        }
+
+        viewModel.bookRemoval.observe(viewLifecycleOwner) {
+            if (it) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.msg_removed_successfully),
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                requireActivity().supportFragmentManager.popBackStack()
+            }
         }
     }
 

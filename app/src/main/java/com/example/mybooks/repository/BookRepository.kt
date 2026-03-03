@@ -2,11 +2,24 @@ package com.example.mybooks.repository
 
 import com.example.mybooks.entity.BookEntity
 
-class BookRepository {
+class BookRepository private constructor() {
 
-    private val books = mutableListOf<BookEntity>()
+        private val books = mutableListOf<BookEntity>()
     init {
         books.addAll(getInitialBooks())
+    }
+
+    companion object {
+        private lateinit var instance: BookRepository
+
+        fun getInstance(): BookRepository {
+            synchronized(this) {
+                if (!::instance.isInitialized) {
+                    instance = BookRepository()
+                }
+            }
+            return instance
+        }
     }
 
     private fun getInitialBooks(): List<BookEntity> {
@@ -48,6 +61,7 @@ class BookRepository {
 
     fun deleteBook(id: Int): Boolean {
         return books.removeIf { it.id == id }
+        // tratar atualizações de livros
     }
 
     fun toggleFavoriteStatus(id: Int) {

@@ -54,6 +54,11 @@ class HomeFragment : Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAllBooks()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
