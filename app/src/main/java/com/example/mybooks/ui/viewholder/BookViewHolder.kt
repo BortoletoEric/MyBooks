@@ -14,11 +14,8 @@ class BookViewHolder(private val item: ItemBookBinding, private val listener: Bo
         item.textviewAuthor.text = book.author
         item.textviewGenre.text = book.genre
 
-        item.textviewTitle.setOnClickListener (object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                listener.onClick(book.id)
-            }
-        })
+        item.textviewTitle.setOnClickListener { listener.onClick(book.id) }
+        item.imageviewFavorite.setOnClickListener { listener.onFavoriteClick(book.id) }
 
         setGenreBackground(book.genre)
 
