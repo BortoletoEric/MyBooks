@@ -31,11 +31,16 @@ class BookRepository private constructor(context: Context) {
 
         if (cursor.moveToFirst()) {
             do {
-                val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.ID))
-                val title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.TITLE))
-                val author = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.AUTHOR))
-                val genre = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.GENRE))
-                val favorite: Boolean = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.FAVORITE)) == 1
+                val id =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.ID))
+                val title =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.TITLE))
+                val author =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.AUTHOR))
+                val genre =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.GENRE))
+                val favorite: Boolean =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.FAVORITE)) == 1
 
                 books.add(BookEntity(id, title, author, favorite, genre))
             } while (cursor.moveToNext())
@@ -50,19 +55,38 @@ class BookRepository private constructor(context: Context) {
         val db = database.readableDatabase
         val books = mutableListOf<BookEntity>()
 
-        val cursor = db.query(DatabaseConstants.BOOK.TABLE_NAME, null, null, null, null, null, null)
+        val cursor = db.query(
+            DatabaseConstants.BOOK.TABLE_NAME,
+            null,
+            "${DatabaseConstants.BOOK.COLUMNS.FAVORITE} = ?",
+            arrayOf("1"),
+            null,
+            null,
+            null,
+            null
+        )
 
         if (cursor.moveToFirst()) {
-            do {
-                val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.ID))
-                val title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.TITLE))
-                val author = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.AUTHOR))
-                val genre = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.GENRE))
-                val favorite: Boolean = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.FAVORITE)) == 1
 
-                if (favorite) books.add(BookEntity(id, title, author, favorite, genre))
+            val idIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.ID)
+            val titleIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.TITLE)
+            val authorIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.AUTHOR)
+            val genreIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.GENRE)
+            val favoriteIndex =
+                cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.FAVORITE)
+
+            do {
+                val id = cursor.getInt(idIndex)
+                val title = cursor.getString(titleIndex)
+                val author = cursor.getString(authorIndex)
+                val genre = cursor.getString(genreIndex)
+                val favorite = cursor.getInt(favoriteIndex) == 1
+
+                books.add(BookEntity(id, title, author, favorite, genre))
+
             } while (cursor.moveToNext())
         }
+
         cursor.close()
         db.close()
 
