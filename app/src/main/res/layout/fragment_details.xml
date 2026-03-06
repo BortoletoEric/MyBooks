@@ -30,7 +30,7 @@
     <TextView
         android:id="@+id/textview_author"
         android:layout_marginTop="32dp"
-        android:text="Autor"
+        android:text="@string/autor"
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
     <TextView
         android:id="@+id/textview_genre"
         android:layout_marginTop="32dp"
-        android:text="Genero"
+        android:text="@string/genero"
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
     <TextView
         android:id="@+id/textview_favorite"
         android:layout_marginTop="32dp"
-        android:text="Livro Favorito?"
+        android:text="@string/livro_favorito"
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
         android:id="@+id/checkbox_favorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Favorito"
+        android:text="@string/favorito"
         app:layout_constraintTop_toBottomOf="@id/textview_favorite"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -96,7 +96,7 @@
         android:id="@+id/button_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remover Livro"
+        android:text="@string/remover_livro"
         android:backgroundTint="@color/red"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
