@@ -1,14 +1,12 @@
 package com.example.mybooks.repository
 
-import android.content.ContentValues
 import android.content.Context
-import android.util.Log
 import com.example.mybooks.entity.BookEntity
-import com.example.mybooks.helper.DatabaseConstants
 
 class BookRepository private constructor(context: Context) {
 
-    private var database = BookDatabaseHelper(context)
+    private var database = BookDataBase.getDataBase(context).bookDAO()
+
 
     companion object {
         private lateinit var instance: BookRepository
@@ -24,130 +22,24 @@ class BookRepository private constructor(context: Context) {
     }
 
     fun getAllBooks(): List<BookEntity> {
-        val db = database.readableDatabase
-        val books = mutableListOf<BookEntity>()
-
-        val cursor = db.query(DatabaseConstants.BOOK.TABLE_NAME, null, null, null, null, null, null)
-
-        if (cursor.moveToFirst()) {
-            val idIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.ID)
-            val titleIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.TITLE)
-            val authorIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.AUTHOR)
-            val genreIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.GENRE)
-            val favoriteIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.FAVORITE)
-
-            do {
-                val id = cursor.getInt(idIndex)
-                val title = cursor.getString(titleIndex)
-                val author = cursor.getString(authorIndex)
-                val genre = cursor.getString(genreIndex)
-                val favorite = cursor.getInt(favoriteIndex) == 1
-
-                books.add(BookEntity(id, title, author, favorite, genre))
-            } while (cursor.moveToNext())
-        }
-        cursor.close()
-        db.close()
-
-        return books
+        return database.getAllBooks()
     }
 
     fun getFavoriteBooks(): List<BookEntity> {
-        val db = database.readableDatabase
-        val books = mutableListOf<BookEntity>()
-
-        val cursor = db.query(
-            DatabaseConstants.BOOK.TABLE_NAME,
-            null,
-            "${DatabaseConstants.BOOK.COLUMNS.FAVORITE} = ?",
-            arrayOf("1"),
-            null,
-            null,
-            null,
-            null
-        )
-
-        if (cursor.moveToFirst()) {
-
-            val idIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.ID)
-            val titleIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.TITLE)
-            val authorIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.AUTHOR)
-            val genreIndex = cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.GENRE)
-            val favoriteIndex =
-                cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.FAVORITE)
-
-            do {
-                val id = cursor.getInt(idIndex)
-                val title = cursor.getString(titleIndex)
-                val author = cursor.getString(authorIndex)
-                val genre = cursor.getString(genreIndex)
-                val favorite = cursor.getInt(favoriteIndex) == 1
-
-                books.add(BookEntity(id, title, author, favorite, genre))
-
-            } while (cursor.moveToNext())
-        }
-
-        cursor.close()
-        db.close()
-
-        return books
+        return database.getFavoriteBooks()
     }
 
-    fun getBookById(id: Int): BookEntity? {
-        val db = database.readableDatabase
-
-        val cursor = db.query(
-            DatabaseConstants.BOOK.TABLE_NAME,
-            null,
-            "${DatabaseConstants.BOOK.COLUMNS.ID} = ?",
-            arrayOf(id.toString()),
-            null,
-            null,
-            null,
-            null
-        )
-
-        var book: BookEntity? = null
-        if (cursor.moveToFirst()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.ID))
-            val title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.TITLE))
-            val author = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.AUTHOR))
-            val genre = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.GENRE))
-            val favorite: Boolean =  cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstants.BOOK.COLUMNS.FAVORITE)) == 1
-
-            book = BookEntity(id, title, author, favorite, genre)
-        }
-
-        cursor.close()
-        db.close()
-
-        return book
-    }
-
-    fun deleteBook(id: Int): Boolean {
-        val db = database.writableDatabase
-
-        val rowsDeleted = db.delete(DatabaseConstants.BOOK.TABLE_NAME, "${DatabaseConstants.BOOK.COLUMNS.ID} = ?", arrayOf(id.toString()))
-        db.close()
-
-        Log.d("BookRepository", "Book with ID $id deleted. Rows affected: $rowsDeleted")
-        return rowsDeleted > 0
+    fun getBookById(id: Int): BookEntity {
+        return database.getBookById(id)
     }
 
     fun toggleFavoriteStatus(id: Int) {
         val book = getBookById(id)
-        val newFavoriteStatus = if (book?.favorite == true) 0 else 1
+        book.favorite = !book.favorite
+        database.update(book)
+    }
 
-        val db = database.writableDatabase
-        val values = ContentValues().apply {
-            put(DatabaseConstants.BOOK.COLUMNS.FAVORITE, newFavoriteStatus)
-        }
-        db.update(
-            DatabaseConstants.BOOK.TABLE_NAME,
-            values,
-            "${DatabaseConstants.BOOK.COLUMNS.ID} = ?",
-            arrayOf(id.toString())
-        )
+    fun deleteBook(id: Int): Boolean {
+        return database.delete(getBookById(id)) > 0
     }
 }
