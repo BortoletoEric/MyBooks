@@ -15,6 +15,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = BookRepository.getInstance(application.applicationContext)
 
+    init {
+        if (repository.getAllBooks().isEmpty()) {
+            repository.loadInitialData()
+        }
+    }
     fun getAllBooks() {
         _books.value = repository.getAllBooks()
     }
