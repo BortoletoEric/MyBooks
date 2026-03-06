@@ -1,14 +1,14 @@
 package com.example.mybooks.repository
 
+import android.content.ContentValues
 import android.content.Context
+import android.util.Log
 import com.example.mybooks.entity.BookEntity
 import com.example.mybooks.helper.DatabaseConstants
 
 class BookRepository private constructor(context: Context) {
 
     private var database = BookDatabaseHelper(context)
-
-    private val books = mutableListOf<BookEntity>()
 
     companion object {
         private lateinit var instance: BookRepository
@@ -126,14 +126,28 @@ class BookRepository private constructor(context: Context) {
     }
 
     fun deleteBook(id: Int): Boolean {
-        return books.removeIf { it.id == id }
-        // tratar atualizações de livros
+        val db = database.writableDatabase
+
+        val rowsDeleted = db.delete(DatabaseConstants.BOOK.TABLE_NAME, "${DatabaseConstants.BOOK.COLUMNS.ID} = ?", arrayOf(id.toString()))
+        db.close()
+
+        Log.d("BookRepository", "Book with ID $id deleted. Rows affected: $rowsDeleted")
+        return rowsDeleted > 0
     }
 
     fun toggleFavoriteStatus(id: Int) {
-        val book = books.find { it.id == id }
-        if (book != null) {
-            book.favorite = !book.favorite
+        val book = getBookById(id)
+        val newFavoriteStatus = if (book?.favorite == true) 0 else 1
+
+        val db = database.writableDatabase
+        val values = ContentValues().apply {
+            put(DatabaseConstants.BOOK.COLUMNS.FAVORITE, newFavoriteStatus)
         }
+        db.update(
+            DatabaseConstants.BOOK.TABLE_NAME,
+            values,
+            "${DatabaseConstants.BOOK.COLUMNS.ID} = ?",
+            arrayOf(id.toString())
+        )
     }
 }
