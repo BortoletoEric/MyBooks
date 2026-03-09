@@ -26,8 +26,8 @@ abstract class BookDataBase : RoomDatabase() {
                 synchronized(this) {
                     instance =
                         Room.databaseBuilder(context, BookDataBase::class.java, DATABASE_NAME)
-                            .addMigrations()
                             .addCallback(DatabaseCallback(context))
+                            .addMigrations()
                             .build()
                 }
             }

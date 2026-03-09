@@ -39,11 +39,6 @@ class FavoriteFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewmodel.getFavoriteBooks()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -60,7 +55,6 @@ class FavoriteFragment : Fragment() {
 
             override fun onFavoriteClick(id: Int) {
                 viewmodel.favorite(id)
-                viewmodel.getFavoriteBooks()
             }
         })
     }
@@ -68,16 +62,24 @@ class FavoriteFragment : Fragment() {
     private fun setObservers() {
         viewmodel.books.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
-                binding.recyclerviewBooksFavorite.visibility = View.GONE
-                binding.textviewNoBooks.visibility = View.VISIBLE
-                binding.imageviewNoBooks.visibility = View.VISIBLE
+                showNoBooks(true)
             } else {
-                binding.recyclerviewBooksFavorite.visibility = View.VISIBLE
-                binding.textviewNoBooks.visibility = View.GONE
-                binding.imageviewNoBooks.visibility = View.GONE
+                showNoBooks(false)
                 adapter.updateBooks(it)
             }
         }
 
+    }
+
+    private fun showNoBooks(bool: Boolean) {
+        if (true) {
+            binding.recyclerviewBooksFavorite.visibility = View.GONE
+            binding.textviewNoBooks.visibility = View.VISIBLE
+            binding.imageviewNoBooks.visibility = View.VISIBLE
+        } else {
+            binding.recyclerviewBooksFavorite.visibility = View.VISIBLE
+            binding.textviewNoBooks.visibility = View.GONE
+            binding.imageviewNoBooks.visibility = View.GONE
+        }
     }
 }

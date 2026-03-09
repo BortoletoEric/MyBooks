@@ -52,14 +52,8 @@ class HomeFragment : Fragment() {
 
             override fun onFavoriteClick(id: Int) {
                 viewModel.favorite(id)
-                viewModel.getAllBooks()
             }
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getAllBooks()
     }
 
     override fun onDestroyView() {
@@ -68,7 +62,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.books.observe(viewLifecycleOwner) {
+        viewModel.booksList.observe(viewLifecycleOwner) {
             adapter.updateBooks(it)
         }
 
