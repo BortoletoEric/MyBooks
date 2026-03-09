@@ -4,9 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mybooks.entity.BookEntity
 import com.example.mybooks.repository.BookRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -15,15 +17,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = BookRepository.getInstance(application.applicationContext)
 
-    init {
-        if (repository.getAllBooks().isEmpty()) {
-            repository.loadInitialData()
+    fun getAllBooks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _books.postValue(repository.getAllBooks())
         }
     }
-    fun getAllBooks() {
-        _books.value = repository.getAllBooks()
-    }
+
     fun favorite(id: Int) {
-        repository.toggleFavoriteStatus(id)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.toggleFavoriteStatus(id)
+        }
     }
 }
