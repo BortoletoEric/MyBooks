@@ -71,8 +71,8 @@ class FavoriteFragment : Fragment() {
 
     }
 
-    private fun showNoBooks(bool: Boolean) {
-        if (true) {
+    private fun showNoBooks(isEmpty: Boolean) {
+        if (isEmpty) {
             binding.recyclerviewBooksFavorite.visibility = View.GONE
             binding.textviewNoBooks.visibility = View.VISIBLE
             binding.imageviewNoBooks.visibility = View.VISIBLE
