@@ -18,14 +18,14 @@ interface BookDAO {
     fun getFavoriteBooks(): Flow<List<BookEntity>>
 
     @Query("SELECT * FROM Book WHERE id = :id")
-    fun getBookById(id: Int): BookEntity
+    suspend fun getBookById(id: Int): BookEntity
 
     @Update
-    fun update(book: BookEntity)
+    suspend fun update(book: BookEntity)
 
     @Delete
-    fun delete(book: BookEntity): Int
+    suspend fun delete(book: BookEntity): Int
 
     @Insert
-    fun insert(book: List<BookEntity>)
+    suspend fun insert(book: List<BookEntity>)
 }
