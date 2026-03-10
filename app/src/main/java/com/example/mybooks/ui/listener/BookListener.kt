@@ -4,6 +4,7 @@ interface BookListener {
     fun onClick(id: Int) {
 
     }
+
     fun onFavoriteClick(id: Int) {
 
     }

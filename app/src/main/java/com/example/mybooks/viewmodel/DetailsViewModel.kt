@@ -10,7 +10,8 @@ import com.example.mybooks.repository.BookRepository
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: BookRepository = BookRepository.getInstance(application.applicationContext)
+    private val repository: BookRepository =
+        BookRepository.getInstance(application.applicationContext)
 
     private val _book = MutableLiveData<BookEntity>()
     val book: LiveData<BookEntity> = _book

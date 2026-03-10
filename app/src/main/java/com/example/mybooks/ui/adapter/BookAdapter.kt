@@ -8,7 +8,7 @@ import com.example.mybooks.entity.BookEntity
 import com.example.mybooks.ui.listener.BookListener
 import com.example.mybooks.ui.viewholder.BookViewHolder
 
-class BookAdapter: RecyclerView.Adapter<BookViewHolder>() {
+class BookAdapter : RecyclerView.Adapter<BookViewHolder>() {
 
     private var bookList = listOf<BookEntity>()
     private lateinit var bookListener: BookListener

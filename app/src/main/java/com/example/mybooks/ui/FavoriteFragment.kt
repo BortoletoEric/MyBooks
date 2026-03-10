@@ -1,7 +1,6 @@
 package com.example.mybooks.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,7 +44,7 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun attachListener() {
-        adapter.attachListener(object: BookListener{
+        adapter.attachListener(object : BookListener {
             override fun onClick(id: Int) {
                 val bundle = Bundle()
                 bundle.putInt(BookConstants.KEY.BOOK_ID, id)

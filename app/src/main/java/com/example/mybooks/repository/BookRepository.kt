@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class BookRepository private constructor(context: Context) {
 
     private var database = BookDataBase.getDataBase(context).bookDAO()
+
     companion object {
         private lateinit var instance: BookRepository
 

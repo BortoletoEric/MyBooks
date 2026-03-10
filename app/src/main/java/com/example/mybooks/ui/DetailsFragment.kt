@@ -23,7 +23,8 @@ class DetailsFragment : Fragment() {
     private var bookId = 0
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, b: Bundle?): View {
+        inflater: LayoutInflater, container: ViewGroup?, b: Bundle?
+    ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
 
         setListeners()
@@ -57,7 +58,8 @@ class DetailsFragment : Fragment() {
     private fun handleRemove() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setMessage(getString(R.string.dialog_message_delete_item))
-            .setPositiveButton(getString(R.string.dialog_positive_button_yes)
+            .setPositiveButton(
+                getString(R.string.dialog_positive_button_yes)
             ) { dialog, which ->
                 viewModel.deleteBook(bookId)
             }
@@ -99,9 +101,11 @@ class DetailsFragment : Fragment() {
             "Terror" -> {
                 binding.textviewGenreValue.setBackgroundResource(R.drawable.rounded_label_red)
             }
+
             "Fantasia" -> {
                 binding.textviewGenreValue.setBackgroundResource(R.drawable.rounded_label_fantasy)
             }
+
             else -> {
                 binding.textviewGenreValue.setBackgroundResource(R.drawable.rounded_label_teal)
             }
