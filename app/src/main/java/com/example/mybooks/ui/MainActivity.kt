@@ -9,7 +9,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.navigation.fragment.findNavController
 import com.example.mybooks.R
 import com.example.mybooks.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -49,20 +48,13 @@ class MainActivity : AppCompatActivity() {
 
 
         navView.setOnItemSelectedListener { item ->
-            // 2. Verificamos se o destino atual é o Detalhes
             if (navController.currentDestination?.id == R.id.navigation_details) {
-                // Use o navController para voltar, NUNCA o supportFragmentManager manual aqui
                 navController.popBackStack()
             }
-
-            // 3. Só navegamos se o clique for em uma aba DIFERENTE da que já estamos
             if (item.itemId != navController.currentDestination?.id) {
-                // O onNavDestinationSelected cuida de limpar o histórico para não empilhar
-                // as telas infinitamente ao clicar nos ícones.
                 androidx.navigation.ui.NavigationUI.onNavDestinationSelected(item, navController)
             }
-
-            true // Indica que o item foi selecionado visualmente
+            true
         }
     }
 }
